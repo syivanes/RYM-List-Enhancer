@@ -1,10 +1,12 @@
-{{!-- <div>
-  {{recordTitle}} by {{artistName}}
-  <br>
-  {{releaseYear}}
-  <br>
-  {{rymId}}
-</div> --}}
 <div>
-  {{data}}
+  "{{listTitle}}" by {{listAuthor}}
+  <br>
+  {{#each listRecords}}
+    {{this.recordTitle}} by {{this.artistName}} ({{this.releaseYear}})
+    <br>
+    RYM ID: {{this.rymId}}
+    <br>
+  {{/each}}
 </div>
+<input type="submit" value="approve results and save">
+<input type="submit" value="start over">

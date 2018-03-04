@@ -11,11 +11,12 @@ router.route('/')
   })
   .post((req, res) => {
     var linkInput = req.body.listlink
-    console.log(linkInput)
     scraper(linkInput)
       .then(result => {
         res.render('preview-scrape-results', {
-          data: JSON.stringify(result)
+          listAuthor: result.author,
+          listTitle: result.listTitle,
+          listRecords: result.records
         })
       })
   })
