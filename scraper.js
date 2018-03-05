@@ -27,11 +27,12 @@ const scraper = (url) => {
     .then(filteredData => {
       filteredData.records = formatRecordsData(filteredData.records)
       // return filteredData.records;
+      console.log(filteredData);
       return filteredData;
     })
 }
 
-scraper('http://localhost:3000/bandcamp-death-metal')
+// scraper('http://localhost:3000/bandcamp-death-metal')
 
 const filterOutBlankRecords = (records) => {
   return records.filter(record => record.rymId.length > 0)
@@ -39,37 +40,27 @@ const filterOutBlankRecords = (records) => {
 
 const paramFormatter = (param, pattern) => {
   const match = param.match(pattern);
-  return match[0];
+  if ((match) && (match.length > 0)) {
+    return match[0]
+  } else {
+    return ''
+  }
 }
 
 const formatRymId = (rymId) => {
-  if (rymId) {
-    return paramFormatter(rymId, /\w+\d+/g);
-  } else {
-    return '';
-  }
+  return paramFormatter(rymId, /\w+\d+/g);
 }
 
 const formatListTitle = (listTitle) => {
-  if (listTitle) {
-    return paramFormatter(listTitle, /^(.*?)\./)
-  } else {
-    return '';
-  }
+  return paramFormatter(listTitle, /^(.*?)\./)
 }
 
 const formatReleaseYear = (releaseYear) => {
-  if (releaseYear) { 
-    return paramFormatter(releaseYear, /\d{4}/g);
-  } else {
-    return '';
-  }
+  return paramFormatter(releaseYear, /\d{4}/g);
 }
 
 const formatAuthor = (author) => {
-  if (author) {
-    return paramFormatter(author, /[^\s]+/g);
-  }
+  return paramFormatter(author, /[^\s]+/g);
 }
 
 const formatRecordsData = (records) => {
