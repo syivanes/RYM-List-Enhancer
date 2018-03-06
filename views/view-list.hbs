@@ -1,0 +1,10 @@
+<div>
+"{{listTitle}}" by {{listAuthor}}
+
+
+<ul>
+  {{#each listRecords}}
+    <li>{{this.recordTitle}} by {{this.artistName}} ({{this.releaseYear}})</li>
+  {{/each}}
+</ul>
+</div>

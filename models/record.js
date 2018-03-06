@@ -17,6 +17,9 @@ const Record = sequelize.define('record', {
   },
   releaseYear: {
     type: Sequelize.STRING
+  },
+  discogsId: {
+    type: Sequelize.STRING
   }
 })
 

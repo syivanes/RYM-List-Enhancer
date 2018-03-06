@@ -12,8 +12,24 @@ const scraper = require('../scraper');
 
 router.route('/')
   .get((req, res) => {
-    res.render('index');
-  })
+    RecordList.findAll()
+      .then(allLists => {
+        const lists = allLists.map(list => {
+          return {
+            listTitle: list.title,
+            listAuthor: list.rymUser,
+            id: list.id
+          }
+        })
+        return lists;
+      })
+      .then(lists => {
+        res.render('index', {
+          lists: lists
+        });
+      })
+    })
+
   .post((req, res, next) => {
     var linkInput = req.body.listlink
     scraper(linkInput)
@@ -52,6 +68,30 @@ router.route('/save-scrape-results')
         })
       })
     })
+  })
+
+router.route('/list/:id')
+  .get((req, res) => {
+    RecordList.findOne({
+      where: {
+        id: req.params.id
+      }
+    }).then(result => {
+        Record.findAll({
+          include: {
+            model: RecordList,
+            where: {id: result.id}
+          }
+        }).then(records => {
+            res.render('view-list', {
+              listAuthor: result.rymUser,
+              listTitle: result.title,
+              listRecords: records
+            })
+          })
+        
+
+      })
   })
 
 

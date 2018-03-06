@@ -12,10 +12,10 @@ const dis = {
 
 const db = new Discogs(dis).database();
 
-// db.getMaster("618856", (err, data) => {
-//   console.log(data);
-// })
-db.search("The Complete Aladdin Recordings Of Lester Young", "title", (err, data) => {
+db.getRelease("9911814", (err, data) => {
   console.log(data);
-});
+})
+// db.search("The Complete Aladdin Recordings Of Lester Young", "title", (err, data) => {
+//   console.log(data);
+// });
 // 

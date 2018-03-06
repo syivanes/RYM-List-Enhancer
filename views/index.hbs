@@ -6,3 +6,14 @@
   <input type="url" name="listlink"><br>
   <input type="submit" value="Submit">
 </form>
+
+<div>
+  Check out lists already on file
+  <br>
+  {{#each lists}}
+    <a href='list/{{id}}'>
+    {{listAuthor}}: {{listTitle}}
+    </a>
+    <br>
+  {{/each}}
+</div>
