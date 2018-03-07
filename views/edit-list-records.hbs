@@ -2,9 +2,9 @@
 
 <ul>
   {{#each listRecords}}
-  <form action="/expand-list-records-save/{{this.id}}" method="POST">
+  <form action="/expand-list-records-save/{{../listId}}/{{id}}" method="POST">
 
-    <li>{{this.recordTitle}} by {{this.artistName}} ({{this.releaseYear}})
+    <li>{{recordTitle}} by {{artistName}} ({{releaseYear}})
       <br>
       <label>Paste embed code here:</label>
       <textarea name="embeddedmedia" cols="30" rows="10">{{embeddedMedia}}</textarea>
