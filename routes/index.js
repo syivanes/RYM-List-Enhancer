@@ -31,8 +31,10 @@ router.route('/')
     })
 
   .post((req, res, next) => {
-    var linkInput = req.body.listlink
-    scraper(linkInput)
+    // console.log(req.body.pagesource)
+    redisClient.set('pageSource', req.body.pagesource)
+    // .then(() => {
+      scraper('http://localhost:3000/temp-page-source')
       .then(result => {
 
         redisClient.set('scrapeResults', JSON.stringify(result));
@@ -45,6 +47,8 @@ router.route('/')
           })
         })
       })
+    // })
+    
   })
 
 router.route('/save-scrape-results')
@@ -95,6 +99,15 @@ router.route('/expand-list-records/:id')
 
     //   })
     })
+
+router.route('/temp-page-source')
+  .get((req, res) => {
+    redisClient.get('pageSource', (err, data) => {
+      res.render('temp-page-source', {
+        pageSource: data
+      })
+    })
+  })
 
 
 const sendListDataToView = (req, res, view) => {
