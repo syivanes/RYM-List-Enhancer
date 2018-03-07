@@ -83,22 +83,25 @@ router.route('/expand-list-records/:id')
   .get((req, res) => {
     sendListDataToView(req, res, 'edit-list-records')
   })
-  .post((req, res) => {
-    console.log(req)
-    // Record.findOne({
-    //   where: {
-    //     id: req.params.id
-    //   }
-    // }).then(result => {
-    //   result.update({
-    //     emdebbedMedia: req.body.embeddedMedia
-    //   }).then(() => {
-    //     console.log(req.params.id)
-    //     sendListDataToView({ id: req.params.id}, res, 'view-list')
-    //   })
+  
 
-    //   })
-    })
+router.route('/expand-list-records-save/:recordId')
+  .post((req, res) => {
+      // console.log(req.body)
+      Record.findOne({
+        where: {
+          id: req.params.recordId
+        }
+      }).then(result => {
+        console.log(req.body)
+        result.update({
+          embeddedMedia: req.body.embeddedmedia
+        })
+        // sendListDataToView({ id: req.params.id}, res, 'view-list')
+
+
+        })
+      })
 
 router.route('/temp-page-source')
   .get((req, res) => {
