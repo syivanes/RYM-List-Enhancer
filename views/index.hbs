@@ -1,9 +1,10 @@
 <h1>RYM Record List Enhancer</h1>
-<p>drop a link to the list that you would like to enhance below</p>
+<p>copy the desired list's page source and paste it into the box below</p>
 
 <form method="POST">
-  paste the link here:
-  <input type="url" name="listlink"><br>
+  <textarea name="pagesource" cols="30" rows="10">{{pageSource}}</textarea>
+  {{!-- <input type="url" name="listlink"> --}}
+  <br>
   <input type="submit" value="Submit">
 </form>
 
