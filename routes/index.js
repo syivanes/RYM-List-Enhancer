@@ -68,6 +68,10 @@ router.route('/save-scrape-results')
             releaseYear: record.releaseYear
           }).then(record => {
             record.addRecordList(createdList);
+          }).then(() => {
+            res.redirect('/')
+            // sendListDataToView({ params: {id: createdList.id} }, res, 'view-list')
+
           })
         })
       })
@@ -85,23 +89,24 @@ router.route('/expand-list-records/:id')
   })
   
 
-router.route('/expand-list-records-save/:recordId')
+router.route('/expand-list-records-save/:listId/:recordId')
   .post((req, res) => {
-      // console.log(req.body)
+      // console.log(req)
       Record.findOne({
         where: {
           id: req.params.recordId
         }
       }).then(result => {
-        console.log(req.body)
-        result.update({
-          embeddedMedia: req.body.embeddedmedia
-        })
-        // sendListDataToView({ id: req.params.id}, res, 'view-list')
+        // console.log(req.body)
+          result.update({
+            embeddedMedia: req.body.embeddedmedia
+          })
+      }).then(() => {
+          console.log("sending list to view")
+          sendListDataToView({ params: {id: req.params.listId} }, res, 'view-list')
 
-
         })
-      })
+    })
 
 router.route('/temp-page-source')
   .get((req, res) => {
@@ -114,17 +119,21 @@ router.route('/temp-page-source')
 
 
 const sendListDataToView = (req, res, view) => {
+  console.log("finding record list")
   RecordList.findOne({
     where: {
       id: req.params.id
     }
   }).then(result => {
-      Record.findAll({
+      console.log("findting record relations")
+      return Record.findAll({
         include: {
           model: RecordList,
           where: {id: result.id}
         }
       }).then(records => {
+          console.log("rendering")
+          res.setHeader('X-XSS-Protection', '0');
           res.render(view, {
             listAuthor: result.rymUser,
             listTitle: result.title,
