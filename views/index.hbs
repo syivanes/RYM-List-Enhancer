@@ -1,2 +1,19 @@
-<h1>{{title}}</h1>
-<p>Welcome to {{title}}</p>
+<h1>RYM Record List Enhancer</h1>
+<p>drop a link to the list that you would like to enhance below</p>
+
+<form method="POST">
+  paste the link here:
+  <input type="url" name="listlink"><br>
+  <input type="submit" value="Submit">
+</form>
+
+<div>
+  Check out lists already on file
+  <br>
+  {{#each lists}}
+    <a href='list/{{id}}'>
+    {{listAuthor}}: {{listTitle}}
+    </a>
+    <br>
+  {{/each}}
+</div>

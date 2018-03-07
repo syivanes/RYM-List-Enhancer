@@ -1,0 +1,15 @@
+<form action="save-scrape-results" method="POST">
+<div>
+  "{{listTitle}}" by {{listAuthor}}
+  <br>
+  {{#each listRecords}}
+    {{this.recordTitle}} by {{this.artistName}} ({{this.releaseYear}})
+    <br>
+    RYM ID: {{this.rymId}}
+    <br>
+  {{/each}}
+</div>
+
+  <input type="submit" value="approve">
+  <input type="submit" value="start">
+</form>

@@ -1,0 +1,15 @@
+<div>
+"{{listTitle}}" by {{listAuthor}}
+  <ul>
+    {{#each listRecords}}
+      <li>{{this.recordTitle}} by {{this.artistName}} ({{this.releaseYear}})
+        <br>
+        {{{this.embeddedMedia}}}
+      </li>
+    {{/each}}
+  </ul>
+
+  <p>
+    <a href="/expand-list-records/{{listId}}">Expand list's contents</a>
+  </p>
+</div>
