@@ -31,8 +31,10 @@ router.route('/')
     })
 
   .post((req, res, next) => {
-    var linkInput = req.body.listlink
-    scraper(linkInput)
+    // console.log(req.body.pagesource)
+    redisClient.set('pageSource', req.body.pagesource)
+    // .then(() => {
+      scraper('http://localhost:3000/temp-page-source')
       .then(result => {
 
         redisClient.set('scrapeResults', JSON.stringify(result));
@@ -45,6 +47,8 @@ router.route('/')
           })
         })
       })
+    // })
+    
   })
 
 router.route('/save-scrape-results')
@@ -64,6 +68,10 @@ router.route('/save-scrape-results')
             releaseYear: record.releaseYear
           }).then(record => {
             record.addRecordList(createdList);
+          }).then(() => {
+            res.redirect('/')
+            // sendListDataToView({ params: {id: createdList.id} }, res, 'view-list')
+
           })
         })
       })
@@ -79,36 +87,53 @@ router.route('/expand-list-records/:id')
   .get((req, res) => {
     sendListDataToView(req, res, 'edit-list-records')
   })
-  .post((req, res) => {
-    console.log(req)
-    // Record.findOne({
-    //   where: {
-    //     id: req.params.id
-    //   }
-    // }).then(result => {
-    //   result.update({
-    //     emdebbedMedia: req.body.embeddedMedia
-    //   }).then(() => {
-    //     console.log(req.params.id)
-    //     sendListDataToView({ id: req.params.id}, res, 'view-list')
-    //   })
+  
 
-    //   })
+router.route('/expand-list-records-save/:listId/:recordId')
+  .post((req, res) => {
+      // console.log(req)
+      Record.findOne({
+        where: {
+          id: req.params.recordId
+        }
+      }).then(result => {
+        // console.log(req.body)
+          result.update({
+            embeddedMedia: req.body.embeddedmedia
+          })
+      }).then(() => {
+          console.log("sending list to view")
+          sendListDataToView({ params: {id: req.params.listId} }, res, 'view-list')
+
+        })
     })
+
+router.route('/temp-page-source')
+  .get((req, res) => {
+    redisClient.get('pageSource', (err, data) => {
+      res.render('temp-page-source', {
+        pageSource: data
+      })
+    })
+  })
 
 
 const sendListDataToView = (req, res, view) => {
+  console.log("finding record list")
   RecordList.findOne({
     where: {
       id: req.params.id
     }
   }).then(result => {
-      Record.findAll({
+      console.log("findting record relations")
+      return Record.findAll({
         include: {
           model: RecordList,
           where: {id: result.id}
         }
       }).then(records => {
+          console.log("rendering")
+          res.setHeader('X-XSS-Protection', '0');
           res.render(view, {
             listAuthor: result.rymUser,
             listTitle: result.title,
