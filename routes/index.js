@@ -72,27 +72,52 @@ router.route('/save-scrape-results')
 
 router.route('/list/:id')
   .get((req, res) => {
-    RecordList.findOne({
-      where: {
-        id: req.params.id
-      }
-    }).then(result => {
-        Record.findAll({
-          include: {
-            model: RecordList,
-            where: {id: result.id}
-          }
-        }).then(records => {
-            res.render('view-list', {
-              listAuthor: result.rymUser,
-              listTitle: result.title,
-              listRecords: records
-            })
-          })
-        
-
-      })
+    sendListDataToView(req, res, 'view-list')
   })
+
+router.route('/expand-list-records/:id')
+  .get((req, res) => {
+    sendListDataToView(req, res, 'edit-list-records')
+  })
+  .post((req, res) => {
+    console.log(req)
+    // Record.findOne({
+    //   where: {
+    //     id: req.params.id
+    //   }
+    // }).then(result => {
+    //   result.update({
+    //     emdebbedMedia: req.body.embeddedMedia
+    //   }).then(() => {
+    //     console.log(req.params.id)
+    //     sendListDataToView({ id: req.params.id}, res, 'view-list')
+    //   })
+
+    //   })
+    })
+
+
+const sendListDataToView = (req, res, view) => {
+  RecordList.findOne({
+    where: {
+      id: req.params.id
+    }
+  }).then(result => {
+      Record.findAll({
+        include: {
+          model: RecordList,
+          where: {id: result.id}
+        }
+      }).then(records => {
+          res.render(view, {
+            listAuthor: result.rymUser,
+            listTitle: result.title,
+            listRecords: records,
+            listId: req.params.id
+          })
+        })
+    })
+  }
 
 
 router.get('/favorite-jazz', (req, res, next) => {

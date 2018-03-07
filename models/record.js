@@ -20,6 +20,9 @@ const Record = sequelize.define('record', {
   },
   discogsId: {
     type: Sequelize.STRING
+  }, 
+  embeddedMedia: {
+    type: Sequelize.TEXT
   }
 })
 

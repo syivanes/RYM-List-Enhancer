@@ -1,0 +1,16 @@
+"{{listTitle}}" by {{listAuthor}}
+
+<ul>
+  {{#each listRecords}}
+  <form action="/expand-list-records" method="POST">
+
+    <li>{{this.recordTitle}} by {{this.artistName}} ({{this.releaseYear}})
+      <br>
+      <label>Paste embed code here:</label>
+      <input type="text" name="emdeddedMedia" value="{{embeddedMedia}}">
+      <br>
+      <input type="submit" value="Submit embed code">
+    </li>
+    </form>
+  {{/each}}
+</ul>
