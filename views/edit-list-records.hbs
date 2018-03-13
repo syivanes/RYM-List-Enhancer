@@ -1,16 +1,22 @@
-"{{listTitle}}" by {{listAuthor}}
+<h2>"{{listTitle}}" by {{listAuthor}}</h2>
 
 <ul>
   {{#each listRecords}}
-  <form action="/expand-list-records-save/{{../listId}}/{{id}}" method="POST">
 
-    <li>{{recordTitle}} by {{artistName}} ({{releaseYear}})
-      <br>
-      <label>Paste embed code here:</label>
-      <textarea name="embeddedmedia" cols="30" rows="10">{{embeddedMedia}}</textarea>
-      <br>
-      <input type="submit" value="Submit embed code">
-    </li>
-    </form>
+      <form action="/expand-list-records-save/{{../listId}}/{{id}}" method="POST">
+          <div class="record-box">
+              <li>{{recordTitle}} by {{artistName}} ({{releaseYear}})
+                <br>
+                  <div>
+                      <label>Paste media embed code here:</label>
+                      <textarea class="form-control form-control-lg" name="embeddedmedia" cols="30" rows="10">{{embeddedMedia}}</textarea>
+                  </div>
+                <input class="btn btn-secondary btn-block" type="submit" value="Submit embed code" >
+                <br>
+                <br>
+              </li>
+          </div>
+        </div>
+      </form>
   {{/each}}
 </ul>
