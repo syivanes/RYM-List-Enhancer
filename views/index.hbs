@@ -1,14 +1,18 @@
-<h1>RYM Record List Enhancer</h1>
-<p>copy the desired list's page source and paste it into the box below</p>
+<link href="https://fonts.googleapis.com/css?family=Mina" rel="stylesheet">
 
-<form method="POST">
-  <textarea name="pagesource" cols="30" rows="10">{{pageSource}}</textarea>
-  {{!-- <input type="url" name="listlink"> --}}
-  <br>
-  <input type="submit" value="Submit">
-</form>
+<div class="home-page-input">
+  <form method="POST">
+    <h1>RYM Record List Enhancer</h1>
+    <p>copy the desired list's page source and paste it into the box below</p>
+    <textarea name="pagesource" cols="30" rows="10">{{pageSource}}</textarea>
+    {{!-- <input type="url" name="listlink"> --}}
+    <br>
+    <input type="submit" value="Submit">
+  </form>
+</div>
 
-<div>
+<div class="lists-directory">
+
   Check out lists already on file
   <br>
   {{#each lists}}
