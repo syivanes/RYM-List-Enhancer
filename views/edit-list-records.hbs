@@ -1,9 +1,10 @@
 <h2>"{{listTitle}}" by {{listAuthor}}</h2>
+<h3 id="listId" hidden>{{listId}}</h3>
 
 <ul>
   {{#each listRecords}}
 
-      <form action="/expand-list-records-save/{{../listId}}/{{id}}" method="POST">
+      <form id="form{{id}}" action="/expand-list-records-save/{{../listId}}/{{id}}" method="POST">
           <div class="record-box">
               <li>{{recordTitle}} by {{artistName}} ({{releaseYear}})
                 <br>
@@ -11,12 +12,52 @@
                       <label>Paste media embed code here:</label>
                       <textarea class="form-control form-control-lg" name="embeddedmedia" cols="30" rows="10">{{embeddedMedia}}</textarea>
                   </div>
-                <input class="btn btn-secondary btn-block" type="submit" value="Submit embed code" >
                 <br>
                 <br>
               </li>
           </div>
-        </div>
       </form>
+
   {{/each}}
 </ul>
+<input id="submit" class="btn btn-secondary btn-block" type="submit" value="Submit embed code" >
+
+<script>
+  $(document).ready(() => {
+    $('#submit').click(function submitAllForms() {
+
+      var counter = 0; 
+      var totalForms = $('form').length;
+      $('form').each((i, form) => {
+
+        const redirectIfDone = () => {
+          if (counter === totalForms) {
+            alert("all forms updated successfully")
+            window.location.replace(window.location.origin + '/list/' + $('h3')[0].innerText)
+          }   
+        }
+
+        if (!($(form).find('textarea[name="embeddedmedia"]').val())) {
+          counter++
+          redirectIfDone();
+          return true;
+        } else {
+          $.ajax({
+          type: 'POST', 
+          url: $(form).attr('action'),
+          data: $(form).serialize(),
+          success: (data) => {
+            counter++;
+            redirectIfDone();
+          }
+          })
+        }
+      })
+    })
+  })
+  const stashed = () => {
+    var that = $(this);
+        console.log(that.prop('action'))
+        $.post(that.attr('action'), that.serialize())
+  }
+</script>
