@@ -88,6 +88,10 @@ router.route('/expand-list-records/:id')
     sendListDataToView(req, res, 'edit-list-records')
   })
   
+router.route('/process-all-list-forms/:listId')
+  .post((req, res) => {
+    console.log(req.body)
+  })
 
 router.route('/expand-list-records-save/:listId/:recordId')
   .post((req, res) => {
@@ -101,11 +105,13 @@ router.route('/expand-list-records-save/:listId/:recordId')
           result.update({
             embeddedMedia: req.body.embeddedmedia
           })
-      }).then(() => {
-          console.log("sending list to view")
-          sendListDataToView({ params: {id: req.params.listId} }, res, 'view-list')
+          res.end()
+      })
+      // .then(() => {
+      //     console.log("sending list to view")
+      //     sendListDataToView({ params: {id: req.params.listId} }, res, 'view-list')
 
-        })
+      //   })
     })
 
 router.route('/temp-page-source')
