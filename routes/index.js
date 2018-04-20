@@ -10,6 +10,8 @@ const redisClient = redis.createClient();
 
 const scraper = require('../scraper');
 
+const discogs = require('../discogs');
+
 router.route('/')
   .get((req, res) => {
     RecordList.findAll()
@@ -101,18 +103,32 @@ router.route('/expand-list-records-save/:listId/:recordId')
           id: req.params.recordId
         }
       }).then(result => {
-        // console.log(req.body)
-          result.update({
-            embeddedMedia: req.body.embeddedmedia
-          })
+          if ((result.embeddedMedia !== req.body.embeddedmedia) || 
+              (result.discogsId !== req.body.discogsid)) {
+                result.update({
+                  embeddedMedia: req.body.embeddedmedia,
+                  discogsId: req.body.discogsid
+                })
+                console.log(`updating ${result.recordTitle}`)
+          } else {
+            console.log(`nothing to update for ${result.recordTitle}, skipping`)
+            res.end()
+          }
           res.end()
-      })
+        })
       // .then(() => {
       //     console.log("sending list to view")
       //     sendListDataToView({ params: {id: req.params.listId} }, res, 'view-list')
 
       //   })
     })
+
+router.route('/discogs-page/:discogsId')
+  .get((req, res) => {
+    return discogs.getReleaseUrl(req.params.discogsId)
+    .then(result => { res.redirect(result) })
+  })
+  
 
 router.route('/temp-page-source')
   .get((req, res) => {

@@ -6,11 +6,16 @@
 
       <form id="form{{id}}" action="/expand-list-records-save/{{../listId}}/{{id}}" method="POST">
           <div class="record-box">
-              <li>{{recordTitle}} by {{artistName}} ({{releaseYear}})
+              <li>
+                <h4>{{recordTitle}} by {{artistName}} ({{releaseYear}})</h4>
                 <br>
                   <div>
                       <label>Paste media embed code here:</label>
                       <textarea class="form-control form-control-lg" name="embeddedmedia" cols="30" rows="10">{{embeddedMedia}}</textarea>
+                      <br>
+                      <br>
+                      <label>Paste Discogs release ID here, with m/r designation and digits only:</label>
+                      <textarea name="discogsid">{{discogsId}}</textarea>
                   </div>
                 <br>
                 <br>
@@ -30,6 +35,31 @@
       var totalForms = $('form').length;
       $('form').each((i, form) => {
 
+        var embeddedMediaValue = $(form).find('textarea[name="embeddedmedia"]').val()
+        var discogsIdValue = $(form).find('textarea[name="discogsid"]').val()
+        var recordHeader = $(form).find('h4').text()
+
+        const properDiscogsIdFormat = (discogsId) => {
+          if (discogsId.match(/^[mr]\d+/)) {
+            return true
+          } else {
+            return false
+          }
+        }
+        
+        const ajaxPost = () => {
+          $.ajax({
+            type: 'POST', 
+            url: $(form).attr('action'),
+            data: $(form).serialize(),
+            success: (data) => {
+              console.log(`successful POST for ${recordHeader}`)
+              counter++;
+              redirectIfDone();
+            }
+          })
+        }
+
         const redirectIfDone = () => {
           if (counter === totalForms) {
             alert("all forms updated successfully")
@@ -37,27 +67,23 @@
           }   
         }
 
-        if (!($(form).find('textarea[name="embeddedmedia"]').val())) {
+        if ((!embeddedMediaValue) && (!discogsIdValue)) {
           counter++
           redirectIfDone();
           return true;
         } else {
-          $.ajax({
-          type: 'POST', 
-          url: $(form).attr('action'),
-          data: $(form).serialize(),
-          success: (data) => {
-            counter++;
+          if (discogsIdValue && properDiscogsIdFormat(discogsIdValue)) {
+            ajaxPost()
+          } else if ((!discogsIdValue) && (embeddedMediaValue)) {
+            ajaxPost()
+          } else {
+            alert(`Discogs ID not in proper format for ${recordHeader}, make sure that the first character is the m/r notation, followed by digits only, for example: r1234567`)
+            counter++
             redirectIfDone();
+            return true
           }
-          })
         }
       })
     })
   })
-  const stashed = () => {
-    var that = $(this);
-        console.log(that.prop('action'))
-        $.post(that.attr('action'), that.serialize())
-  }
 </script>
