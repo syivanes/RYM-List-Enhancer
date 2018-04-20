@@ -4,8 +4,11 @@
     {{#each listRecords}}
     <li class="media">
       <div class="record-box">
-
-        <h2>{{recordTitle}} by {{artistName}} ({{releaseYear}})</h2>
+        {{#if discogsId}}
+          <h2><a href="/discogs-page/{{discogsId}}">{{recordTitle}} by {{artistName}} ({{releaseYear}})</a></h2>
+        {{else}}
+          <h2>{{recordTitle}} by {{artistName}} ({{releaseYear}})</h2>
+        {{/if}}
         <div class="embedded-media">
         {{{embeddedMedia}}}
         </div>
