@@ -63,13 +63,28 @@ router.route('/save-scrape-results')
         title: parsedRedisData.listTitle
       }).then(createdList => {
         parsedRedisData.records.map((record) => {
-          Record.create({
-            artistName: record.artistName,
-            recordTitle: record.recordTitle,
-            rymId: record.rymId,
-            releaseYear: record.releaseYear
-          }).then(record => {
-            record.addRecordList(createdList);
+          const rymIdAlreadyExists = () => {
+            return Record.findOne({
+              where: {
+                rymId: record.rymId
+              }
+            })
+          }
+
+          rymIdAlreadyExists().then(result => {
+            if (result !== null) {
+              console.log(`${record.recordTitle} already in the db, skipping this one`)
+              result.addRecordList(createdList)
+            } else {
+              Record.create({
+                artistName: record.artistName,
+                recordTitle: record.recordTitle,
+                rymId: record.rymId,
+                releaseYear: record.releaseYear
+              }).then(record => {
+                record.addRecordList(createdList);
+              })
+            }
           }).then(() => {
             res.redirect('/')
             // sendListDataToView({ params: {id: createdList.id} }, res, 'view-list')
@@ -134,7 +149,8 @@ router.route('/temp-page-source')
   .get((req, res) => {
     redisClient.get('pageSource', (err, data) => {
       res.render('temp-page-source', {
-        pageSource: data
+        pageSource: data, 
+        layout: false
       })
     })
   })
