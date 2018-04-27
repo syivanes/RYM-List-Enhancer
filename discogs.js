@@ -14,14 +14,24 @@ const dis = {
 
 const db = new Discogs(dis).database();
 
-const getDiscogsRelease = (releaseId) => {
-  return db.getRelease(releaseId, (err, data) => {
-    return data
-  })
-  .then((data) => {
-    return data.uri
+module.exports.getReleaseUrls = (discogsId) => {
+  console.log(discogsId)
+  var urlData = {};
+  var apiGetCall = () => { return db.getRelease(discogsId.substring(1)) }
+  return Promise.resolve(apiGetCall())
+  .then(result => { 
+    if (result.images) { 
+      urlData['releasePageUrl'] = result.uri;
+      urlData['imageUrl'] = result.images[0].uri150;
+      return urlData
+    } else {
+      urlData['releasePageUrl'] = result.uri;
+      return urlData;
+    }
   })
 }
+
+
 
 // const getReleaseUrl = (discogsId) => { 
 //   return db.getRelease(discogsId)
