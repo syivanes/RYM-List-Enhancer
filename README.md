@@ -26,3 +26,8 @@ Our app integrates the Discogs API. Once the user submits the Discogs ID for a g
 - PostgreSQL with Sequelize
 - Redis 
 - [Discogs API](https://www.discogs.com/developers/) via [Disconnect, the Node.js client for the API](https://github.com/bartve/disconnect)
+
+
+**Plans for near future**
+- Oath integration, which will allow users browsing through lists to save indivitual entries to revisit later
+- Definitely some refactoring
