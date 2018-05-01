@@ -53,8 +53,9 @@ hbs.registerAsyncHelper('getDiscogsUrls', (data, context, cb) => {
   return discogs.getReleaseUrls(data.discogsId)
   .then(result => {
     var str = () => { return (
-      `<h2><a href=${result.releasePageUrl}>${data.recordTitle} by ${data.artistName} (${data.releaseYear})</a></h2>`
-      + '<br>' + `<img src=${result.imageUrl}>`
+      `<a href=${result.releasePageUrl}>`
+      + `<img src=${result.imageUrl}>` + '<br>' 
+      + `<h2>${data.recordTitle} by ${data.artistName} (${data.releaseYear})</h2>` + '</a>'
     ) }
     cb(str())
   })
