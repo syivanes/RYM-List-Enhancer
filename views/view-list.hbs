@@ -1,11 +1,13 @@
 <div>
 <h2>"{{listTitle}}" by {{listAuthor}}</h2>
+
 <ul class="list-unstyled">
     {{#each listRecords}}
     <li class="media">
       <div class="record-box">
         {{#if discogsId}}
-          <h2><a href="/discogs-page/{{discogsId}}">{{recordTitle}} by {{artistName}} ({{releaseYear}})</a></h2>
+          {{{getDiscogsUrls this}}}
+          {{!-- <h2><a href="/discogs-page/{{discogsId}}">{{recordTitle}} by {{artistName}} ({{releaseYear}})</a></h2> --}}
         {{else}}
           <h2>{{recordTitle}} by {{artistName}} ({{releaseYear}})</h2>
         {{/if}}
@@ -23,3 +25,6 @@
     <a href="/expand-list-records/{{listId}}">Expand list's contents</a>
   </p>
 </div>
+<script>
+
+</script>

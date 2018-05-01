@@ -4,6 +4,8 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var hbs = require('hbs');
+var discogs = require('./discogs');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -44,5 +46,22 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+
+hbs.registerAsyncHelper('getDiscogsUrls', (data, context, cb) => {
+
+  return discogs.getReleaseUrls(data.discogsId)
+  .then(result => {
+    var str = () => { return (
+      `<a href=${result.releasePageUrl}>`
+      + `<img src=${result.imageUrl}>` + '<br>' 
+      + `<h2>${data.recordTitle} by ${data.artistName} (${data.releaseYear})</h2>` + '</a>'
+    ) }
+    cb(str())
+  })
+  // .then(result => {
+  //   return result
+  // })
+})
 
 module.exports = app;
