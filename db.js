@@ -4,7 +4,7 @@ const sequelize = new Sequelize({
   username: 'sergeyivanes',
   password: null,
   host: 'localhost',
-  dialect: 'postgres'.toString(),
+  dialect: 'postgres',
   protocol: 'postgres'
 });
 
