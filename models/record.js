@@ -1,31 +1,39 @@
-const Sequelize = require('sequelize');
-const sequelize = require('../db');
-const RecordList = require('./record-list')
+'use strict';
+// const RecordList = require('./record-list');
+// const RecordListRecord = require('./record-list-record');
 
-const Record = sequelize.define('record', {
-  artistName: {
-    type: Sequelize.STRING
-  },
-  recordTitle: {
-    type: Sequelize.STRING
-  },
-  rymId: {
-    type: Sequelize.STRING
-  },
-  genre: {
-    type: Sequelize.STRING
-  },
-  releaseYear: {
-    type: Sequelize.STRING
-  },
-  discogsId: {
-    type: Sequelize.STRING
-  }, 
-  embeddedMedia: {
-    type: Sequelize.TEXT
+module.exports = (sequelize, DataTypes) => {
+  const Record = sequelize.define('record', {
+    artistName: {
+      type: DataTypes.STRING
+    },
+    recordTitle: {
+      type: DataTypes.STRING
+    },
+    rymId: {
+      type: DataTypes.STRING
+    },
+    genre: {
+      type: DataTypes.STRING
+    },
+    releaseYear: {
+      type: DataTypes.STRING
+    },
+    discogsId: {
+      type: DataTypes.STRING
+    }, 
+    embeddedMedia: {
+      type: DataTypes.TEXT
+    }
+  })
+
+  Record.associate = (models) => {
+    models.Record.belongsToMany(models.RecordList, {
+      onDelete: "CASCADE",
+      foreignKey: {
+        allowNull: false
+      }
+    })
   }
-})
-
-Record.belongsToMany(RecordList, {through: 'RecordListRecord'});
-
-module.exports = Record;
+  return Record
+}

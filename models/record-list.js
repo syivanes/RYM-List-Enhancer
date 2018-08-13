@@ -1,19 +1,19 @@
-const Sequelize = require('sequelize');
-const sequelize = require('../db');
-const Record = require('./record')
+'use strict';
+// const Record = require('./record')
+module.exports = (sequelize, DataTypes) => {
+  const RecordList = sequelize.define('recordList', {
+    title: {
+      type: DataTypes.STRING
+    },
+    rymUser: {
+      type: DataTypes.STRING
+    },
+    rymId: {
+      type: DataTypes.STRING
+    }
+  })
 
-const RecordList = sequelize.define('recordList', {
-  title: {
-    type: Sequelize.STRING
-  },
-  rymUser: {
-    type: Sequelize.STRING
-  },
-  rymId: {
-    type: Sequelize.STRING
-  }
-})
+  return RecordList;
+}
 
 // RecordList.belongsToMany(Record, {through: 'RecordListRecord'});
-
-module.exports = RecordList;
