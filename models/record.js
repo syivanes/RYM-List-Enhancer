@@ -1,39 +1,22 @@
 'use strict';
-// const RecordList = require('./record-list');
-// const RecordListRecord = require('./record-list-record');
-
 module.exports = (sequelize, DataTypes) => {
-  const Record = sequelize.define('record', {
-    artistName: {
-      type: DataTypes.STRING
-    },
-    recordTitle: {
-      type: DataTypes.STRING
-    },
-    rymId: {
-      type: DataTypes.STRING
-    },
-    genre: {
-      type: DataTypes.STRING
-    },
-    releaseYear: {
-      type: DataTypes.STRING
-    },
-    discogsId: {
-      type: DataTypes.STRING
-    }, 
-    embeddedMedia: {
-      type: DataTypes.TEXT
-    }
-  })
-
-  Record.associate = (models) => {
-    models.Record.belongsToMany(models.RecordList, {
-      onDelete: "CASCADE",
-      foreignKey: {
-        allowNull: false
-      }
-    })
-  }
-  return Record
-}
+  var Record = sequelize.define('Record', {
+    artistName: DataTypes.STRING,
+    recordTitle: DataTypes.STRING,
+    rymId: DataTypes.STRING,
+    genre: DataTypes.STRING,
+    releaseYear: DataTypes.STRING,
+    discogsId: DataTypes.STRING,
+    embeddedMedia: DataTypes.TEXT
+  }, {});
+  Record.associate = function(models) {
+    // associations can be defined here
+    models.Record.belongsToMany(models.RecordList,
+			{
+				through: 'RecordListRecord',
+				onDelete: "CASCADE",
+				foreignKey: 'recordId'
+			})
+  };
+  return Record;
+};

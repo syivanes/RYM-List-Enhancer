@@ -2,8 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
 
-const Record = require('../models/record');
-const RecordList = require('../models/record-list');
+const models = require('../models');
 
 const redis = require('redis');
 const redisClient = redis.createClient();
@@ -14,7 +13,8 @@ const discogs = require('../discogs');
 
 router.route('/')
   .get((req, res) => {
-    RecordList.findAll()
+    console.log(models)
+    models.RecordList.findAll()
       .then(allLists => {
         const lists = allLists.map(list => {
           return {
@@ -49,8 +49,6 @@ router.route('/')
           })
         })
       })
-    // })
-    
   })
 
 router.route('/save-scrape-results')
@@ -58,13 +56,13 @@ router.route('/save-scrape-results')
     redisClient.get('scrapeResults', (err, data) => {
       parsedRedisData = JSON.parse(data);
 
-      RecordList.create({
+      models.RecordList.create({
         rymUser: parsedRedisData.author,
         title: parsedRedisData.listTitle
       }).then(createdList => {
         parsedRedisData.records.map((record) => {
           const rymIdAlreadyExists = () => {
-            return Record.findOne({
+            return models.Record.findOne({
               where: {
                 rymId: record.rymId
               }
@@ -76,7 +74,7 @@ router.route('/save-scrape-results')
               console.log(`${record.recordTitle} already in the db, skipping this one`)
               result.addRecordList(createdList)
             } else {
-              Record.create({
+              models.Record.create({
                 artistName: record.artistName,
                 recordTitle: record.recordTitle,
                 rymId: record.rymId,
@@ -113,12 +111,12 @@ router.route('/process-all-list-forms/:listId')
 router.route('/expand-list-records-save/:listId/:recordId')
   .post((req, res) => {
       // console.log(req)
-      Record.findOne({
+      models.Record.findOne({
         where: {
           id: req.params.recordId
         }
       }).then(result => {
-          if ((result.embeddedMedia !== req.body.embeddedmedia) || 
+          if ((result.embeddedMedia !== req.body.embeddedmedia) ||
               (result.discogsId !== req.body.discogsid)) {
                 result.update({
                   embeddedMedia: req.body.embeddedmedia,
@@ -143,13 +141,12 @@ router.route('/discogs-page/:discogsId')
     return discogs.getReleaseUrl(req.params.discogsId)
     .then(result => { res.redirect(result) })
   })
-  
 
 router.route('/temp-page-source')
   .get((req, res) => {
     redisClient.get('pageSource', (err, data) => {
       res.render('temp-page-source', {
-        pageSource: data, 
+        pageSource: data,
         layout: false
       })
     })
@@ -158,15 +155,15 @@ router.route('/temp-page-source')
 
 const sendListDataToView = (req, res, view) => {
   console.log("finding record list")
-  RecordList.findOne({
+  models.RecordList.findOne({
     where: {
       id: req.params.id
     }
   }).then(result => {
-      console.log("findting record relations")
-      return Record.findAll({
+      console.log("finding record relations")
+      return models.Record.findAll({
         include: {
-          model: RecordList,
+          model: models.RecordList,
           where: {id: result.id}
         }
       }).then(records => {
