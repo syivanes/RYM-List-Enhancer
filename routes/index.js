@@ -13,7 +13,6 @@ const discogs = require('../discogs');
 
 router.route('/')
   .get((req, res) => {
-    console.log(models)
     models.RecordList.findAll()
       .then(allLists => {
         const lists = allLists.map(list => {
